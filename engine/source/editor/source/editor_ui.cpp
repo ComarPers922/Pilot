@@ -878,10 +878,15 @@ namespace Pilot
     void EditorUI::processEditorCommand()
     {
         float      camera_speed  = 0.05f;
+
         Quaternion camera_rotate = m_tmp_uistate->m_editor_camera->rotation().inverse();
         Vector3    camera_relative_pos(0, 0, 0);
 
         unsigned int command = InputSystem::getInstance().getEditorCommand();
+        if ((unsigned int)EditorCommand::sprint & command)
+        {
+            camera_speed *= 5;
+        }
         if ((unsigned int)EditorCommand::camera_foward & command)
         {
             camera_relative_pos += camera_rotate * Vector3 {0, camera_speed, 0};
