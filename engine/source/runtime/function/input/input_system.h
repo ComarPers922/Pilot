@@ -18,6 +18,7 @@ namespace Pilot
         scale_mode       = 1 << 8,  // C
         exit             = 1 << 9,  // Esc
         delete_object    = 1 << 10, // Delete
+        sprint           = 1 << 11, // Shift
     };
 
     enum class GameCommand : unsigned int

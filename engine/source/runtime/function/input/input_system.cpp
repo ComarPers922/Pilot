@@ -60,6 +60,9 @@ namespace Pilot
                 case GLFW_KEY_DELETE:
                     m_editor_command |= (unsigned int)EditorCommand::delete_object;
                     break;
+				case GLFW_KEY_LEFT_SHIFT:
+                    m_editor_command |= (unsigned int)EditorCommand::sprint;
+                    break;
                 default:
                     break;
             }
@@ -101,6 +104,8 @@ namespace Pilot
                 case GLFW_KEY_DELETE:
                     m_editor_command &= (k_complement_control_command ^ (unsigned int)EditorCommand::delete_object);
                     break;
+				case GLFW_KEY_LEFT_SHIFT:
+                    m_editor_command &= (k_complement_control_command ^ (unsigned int)EditorCommand::sprint);
                 default:
                     break;
             }
