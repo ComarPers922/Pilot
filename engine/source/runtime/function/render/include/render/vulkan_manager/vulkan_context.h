@@ -84,6 +84,7 @@ namespace Pilot
         PFN_vkCmdBindDescriptorSets _vkCmdBindDescriptorSets;
         PFN_vkCmdDrawIndexed        _vkCmdDrawIndexed;
         PFN_vkCmdClearAttachments   _vkCmdClearAttachments;
+        PFN_vkCmdPushConstants      _vkCmdPushConstants;
 
         void createSwapchain();
         void clearSwapchain();

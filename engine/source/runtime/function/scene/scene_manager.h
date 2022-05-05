@@ -47,8 +47,10 @@ namespace Pilot
         void setMainViewMatrix(const Matrix4x4& view_matrix, PCurrentCameraType type = PCurrentCameraType::Editor);
         void setFOV(float fovx);
         void setWindowSize(const Vector2& size) { m_window_size = size; }
+        void setColorGradingIntensity(const float& val) { getCurrentScene() -> m_color_grading_intensity = val; }
         const Vector2& getWindowSize() const { return m_window_size; }
         const Vector2  getFOV() const;
+        const float getColorGrading() const { return getCurrentScene()-> m_color_grading_intensity; }
 
         // for EditorUI
         void         setAxisMesh(std::vector<RenderMesh>& axis_meshes);
@@ -92,7 +94,6 @@ namespace Pilot
         SceneAllocator<ComponentId> m_instance_id_allocator;
 
         Vector2 m_window_size;
-
     private:
         MeshHandle    getOrCreateMeshHandle(const std::string& mesh_file);
         TextureHandle getOrCreateImageHandle(const std::string& image_file, bool srgb = false);

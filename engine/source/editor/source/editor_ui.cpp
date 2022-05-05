@@ -606,6 +606,7 @@ namespace Pilot
         ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_MenuBar;
 
         const ImGuiViewport* main_viewport = ImGui::GetMainViewport();
+        float colorGradingIntensity = SceneManager::getInstance().getColorGrading();
 
         if (!ImGui::Begin("Game Engine", p_open, window_flags))
         {
@@ -693,9 +694,22 @@ namespace Pilot
         }
         else
         {
-            ImGui::TextColored(
-                ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Current editor camera move speed: [%f]", m_camera_speed);
-        }
+			ImGui::TextColored(
+				ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Current editor camera move speed: [%f]", m_camera_speed);
+		}
+
+		ImGui::NewLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Color Grading:");
+		ImGui::NewLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1.0f, 0.0f, 1.0f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
+
+        ImGui::SliderFloat("Intensity", &colorGradingIntensity, 0.0f, 1.0f);
+        SceneManager::getInstance().setColorGradingIntensity(colorGradingIntensity);
+
+        ImGui::PopStyleColor(3);
 
         auto menu_bar_rect = ImGui::GetCurrentWindow()->MenuBarRect();
 

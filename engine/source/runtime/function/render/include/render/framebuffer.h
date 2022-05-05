@@ -151,6 +151,7 @@ namespace Pilot
         Vector3                  m_center {0, 0, 0};
         float                    m_diagonal {0};
         std::shared_ptr<PCamera> m_camera;
+        float m_color_grading_intensity = 0.0f;
 
         std::vector<std::shared_ptr<PParticleBillbord>> m_particlebillboards;
 

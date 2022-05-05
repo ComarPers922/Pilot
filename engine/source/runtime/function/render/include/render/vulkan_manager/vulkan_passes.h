@@ -13,19 +13,59 @@ namespace Pilot
         VkImageView directional_light_shadow_color_image_view;
     };
 
+    struct PColorGradingParamInfo
+    {
+        float color_grading_intensity;
+    };
+
     class PColorGradingPass : public PRenderPassBase
+    {
+    public:
+        void initialize(VkRenderPass render_pass, VkImageView input_attachment, float color_grading_intensity = 0.0f);
+        void draw();
+
+        void updateColorGradingIntensity(const float& intensity);
+        void updateAfterFramebufferRecreate(VkImageView input_attachment);
+        void clear();
+
+    private:
+        void setupDescriptorSetLayout();
+        void setupPipelines();
+        void setupDescriptorSet();
+
+        VkPushConstantRange color_grading_param_push_const;
+
+        PColorGradingParamInfo m_color_grading_param_info
+        {
+            0.0f,
+        };
+    };
+
+    struct PBlurParamInfo
+    {
+        float screen_width;
+        float screen_height;
+    };
+
+    class PBlurPass : public PRenderPassBase
     {
     public:
         void initialize(VkRenderPass render_pass, VkImageView input_attachment);
         void draw();
 
         void updateAfterFramebufferRecreate(VkImageView input_attachment);
+        void clear();
 
     private:
         void setupDescriptorSetLayout();
         void setupPipelines();
         void setupDescriptorSet();
+
+        VkPushConstantRange blur_param_push_const;
+
+        PBlurParamInfo m_blur_param_info;
     };
+
 
     class PToneMappingPass : public PRenderPassBase
     {
@@ -92,9 +132,10 @@ namespace Pilot
         _main_camera_subpass_forward_lighting,
         _main_camera_subpass_tone_mapping,
         _main_camera_subpass_color_grading,
+        _main_camera_subpass_blur,
         _main_camera_subpass_ui,
         _main_camera_subpass_combine_ui,
-        _main_camera_subpass_count
+        _main_camera_subpass_count,
     };
 
     class PMainCameraPass : public PRenderPassBase
@@ -138,6 +179,7 @@ namespace Pilot
 
         void draw(PColorGradingPass& color_grading_pass,
                   PToneMappingPass&  tone_mapping_pass,
+                  PBlurPass&         blur_pass,
                   PUIPass&           ui_pass,
                   PCombineUIPass&    combine_ui_pass,
                   uint32_t           current_swapchain_image_index,
@@ -146,6 +188,7 @@ namespace Pilot
         // legacy
         void drawForward(PColorGradingPass& color_grading_pass,
                          PToneMappingPass&  tone_mapping_pass,
+                         PBlurPass& blur_pass,
                          PUIPass&           ui_pass,
                          PCombineUIPass&    combine_ui_pass,
                          uint32_t           current_swapchain_image_index,

@@ -9,8 +9,12 @@
 
 namespace Pilot
 {
-    void PColorGradingPass::initialize(VkRenderPass render_pass, VkImageView input_attachment)
+    void PColorGradingPass::initialize(VkRenderPass render_pass, VkImageView input_attachment, float color_grading_intensity)
     {
+        color_grading_param_push_const.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+        color_grading_param_push_const.offset = 0;
+        color_grading_param_push_const.size = sizeof(PColorGradingParamInfo);
+
         _framebuffer.render_pass = render_pass;
         setupDescriptorSetLayout();
         setupPipelines();
@@ -63,6 +67,9 @@ namespace Pilot
         pipeline_layout_create_info.sType          = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
         pipeline_layout_create_info.setLayoutCount = 1;
         pipeline_layout_create_info.pSetLayouts    = descriptorset_layouts;
+
+        pipeline_layout_create_info.pushConstantRangeCount = 1;
+        pipeline_layout_create_info.pPushConstantRanges = &color_grading_param_push_const;
 
         if (vkCreatePipelineLayout(
                 m_p_vulkan_context->_device, &pipeline_layout_create_info, nullptr, &_render_pipelines[0].layout) !=
@@ -281,6 +288,13 @@ namespace Pilot
                                                      0,
                                                      NULL);
 
+        m_p_vulkan_context->_vkCmdPushConstants(m_command_info._current_command_buffer,
+            _render_pipelines[0].layout,
+            VK_SHADER_STAGE_FRAGMENT_BIT,
+            0,
+            sizeof(PColorGradingParamInfo),
+            &m_color_grading_param_info);
+
         vkCmdDraw(m_command_info._current_command_buffer, 3, 1, 0, 0);
 
         if (m_render_config._enable_debug_untils_label)
@@ -289,4 +303,13 @@ namespace Pilot
         }
     }
 
+    void PColorGradingPass::updateColorGradingIntensity(const float& intensity)
+    {
+        m_color_grading_param_info.color_grading_intensity = intensity;
+    }
+
+    void PColorGradingPass::clear()
+    {
+        
+    }
 } // namespace Pilot
